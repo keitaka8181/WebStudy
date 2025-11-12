@@ -1,0 +1,11 @@
+# 全てのテキストファイルは自動判定
+* text=auto
+
+# 特定の言語ファイルは LF に固定
+*.js     text eol=lf
+*.ts     text eol=lf
+*.json   text eol=lf
+*.css    text eol=lf
+*.scss   text eol=lf
+*.html   text eol=lf
+*.md     text eol=lf
