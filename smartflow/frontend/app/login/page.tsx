@@ -1,53 +1,46 @@
 'use client'
-
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const router = useRouter()
+  const [message, setMessage] = useState('')
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
+    // 後で /auth/login に送信
     if (email && password) {
-      // ダミー認証: どんな入力でも通す
-      localStorage.setItem('user', JSON.stringify({ email }))
-      router.push('/dashboard')
+      console.log('ログイン成功（ダミー）')
+      setMessage('ログイン成功！（ダミー）')
+      setTimeout(() => router.push('/'), 1000)
     } else {
-      alert('メールアドレスとパスワードを入力してください')
+      setMessage('メールまたはパスワードを入力してください')
     }
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">ログイン</h2>
-
+    <div className="max-w-sm mx-auto mt-10 p-4 border rounded">
+      <h1 className="text-2xl font-bold mb-4">ログイン</h1>
+      <form onSubmit={handleLogin} className="space-y-3">
         <input
           type="email"
           placeholder="メールアドレス"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border w-full p-2 rounded mb-3"
+          className="border p-2 w-full"
         />
         <input
           type="password"
           placeholder="パスワード"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border w-full p-2 rounded mb-3"
+          className="border p-2 w-full"
         />
-
-        <button type="submit" className="bg-blue-600 text-white w-full py-2 rounded">
-          ログイン
-        </button>
-
-        <p className="text-center text-sm mt-3">
-          アカウントを持っていませんか？{' '}
-          <a href="/register" className="text-blue-600 underline">新規登録へ</a>
-        </p>
+        <button className="bg-green-500 text-white px-3 py-2 rounded w-full">ログイン</button>
       </form>
+      {message && <p className="mt-3 text-green-600">{message}</p>}
     </div>
   )
 }

@@ -1,61 +1,39 @@
 'use client'
-
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
-  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const router = useRouter()
+  const [message, setMessage] = useState('')
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (name && email && password) {
-      // ダミー登録: localStorage に保存
-      localStorage.setItem('user', JSON.stringify({ name, email }))
-      router.push('/dashboard')
-    } else {
-      alert('すべての項目を入力してください')
-    }
+    // 後で /auth/register に送る
+    console.log('登録:', { email, password })
+    setMessage('登録成功！（ダミー）')
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <form onSubmit={handleRegister} className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">新規登録</h2>
-
-        <input
-          type="text"
-          placeholder="名前"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="border w-full p-2 rounded mb-3"
-        />
+    <div className="max-w-sm mx-auto mt-10 p-4 border rounded">
+      <h1 className="text-2xl font-bold mb-4">ユーザー登録</h1>
+      <form onSubmit={handleSubmit} className="space-y-3">
         <input
           type="email"
           placeholder="メールアドレス"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border w-full p-2 rounded mb-3"
+          className="border p-2 w-full"
         />
         <input
           type="password"
           placeholder="パスワード"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border w-full p-2 rounded mb-3"
+          className="border p-2 w-full"
         />
-
-        <button type="submit" className="bg-green-600 text-white w-full py-2 rounded">
-          登録する
-        </button>
-
-        <p className="text-center text-sm mt-3">
-          すでにアカウントをお持ちですか？{' '}
-          <a href="/login" className="text-blue-600 underline">ログインへ</a>
-        </p>
+        <button className="bg-blue-500 text-white px-3 py-2 rounded w-full">登録</button>
       </form>
+      {message && <p className="mt-3 text-green-600">{message}</p>}
     </div>
   )
 }

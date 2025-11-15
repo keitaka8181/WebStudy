@@ -16,8 +16,8 @@ export default function ProjectList() {
   return (
     <div className="grid gap-4 mt-6">
       {dummyProjects.map((p) => (
-        <Link key={p.id} href={`/projects/${p.id}`}>
-          <div className="border rounded-xl p-4 bg-white shadow cursor-pointer hover:bg-gray-50">
+        <Link href={`/projects/${p.id}`} key={p.id}>
+          <div className="border rounded-xl p-4 bg-white shadow hover:shadow-md transition-shadow cursor-pointer">
             <h2 className="font-bold text-lg">{p.name}</h2>
             <p className="text-gray-600 text-sm mt-1">{p.description}</p>
           </div>

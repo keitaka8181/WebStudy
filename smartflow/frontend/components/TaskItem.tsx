@@ -1,14 +1,6 @@
 'use client'
-
-import { useEffect, useState } from 'react'
-
-interface Task {
-  id: number
-  title: string
-  description: string
-  status: 'todo' | 'doing' | 'done'
-  dueDate: string
-}
+import { useState } from 'react'
+import { Task } from './TaskList'
 
 export default function TaskItem({
   task,
@@ -20,83 +12,40 @@ export default function TaskItem({
   onDelete: (id: number) => void
 }) {
   const [isEditing, setIsEditing] = useState(false)
-  const [form, setForm] = useState<Task>(task)
+  const [title, setTitle] = useState(task.title)
+  const [status, setStatus] = useState(task.status)
 
-  // 親から渡された task が変わったら form を更新（重要）
-  useEffect(() => {
-    setForm(task)
-  }, [task])
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value } as Task))
-  }
-
-  const handleSave = () => {
-    // 簡単なバリデーション（タイトル必須）
-    if (!form.title.trim()) {
-      alert('タイトルを入力してください')
-      return
-    }
-    onUpdate(form)
+  const save = () => {
+    onUpdate({ ...task, title, status })
     setIsEditing(false)
   }
 
   return (
-    <div className="p-3 border rounded mb-2 bg-white">
+    <li className="border rounded p-2 flex justify-between items-center">
       {isEditing ? (
-        <div className="space-y-2">
+        <div className="flex gap-2 flex-1">
           <input
-            name="title"
-            value={form.title}
-            onChange={handleChange}
-            className="border p-1 w-full"
-            placeholder="タイトル"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="border p-1 flex-1"
           />
-          <input
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            className="border p-1 w-full"
-            placeholder="説明"
-          />
-          <select name="status" value={form.status} onChange={handleChange} className="border p-1 w-full">
+          <select value={status} onChange={(e) => setStatus(e.target.value as Task['status'])}>
             <option value="todo">ToDo</option>
             <option value="doing">Doing</option>
             <option value="done">Done</option>
           </select>
-          <input
-            type="date"
-            name="dueDate"
-            value={form.dueDate}
-            onChange={handleChange}
-            className="border p-1 w-full"
-          />
-          <div className="flex gap-2">
-            <button onClick={handleSave} className="bg-blue-500 text-white px-3 py-1 rounded">
-              保存
-            </button>
-            <button onClick={() => setIsEditing(false)} className="px-3 py-1 border rounded">
-              キャンセル
-            </button>
-          </div>
+          <button onClick={save} className="bg-green-500 text-white px-2 rounded">保存</button>
         </div>
       ) : (
-        <div>
-          <h3 className="font-bold">{task.title}</h3>
-          <p className="text-sm text-gray-700">{task.description}</p>
-          <p className="text-sm text-gray-500">状態: {task.status}</p>
-          <p className="text-sm text-gray-500">期限: {task.dueDate}</p>
-          <div className="mt-2 space-x-2">
-            <button onClick={() => setIsEditing(true)} className="bg-yellow-400 px-2 py-1 rounded">
-              編集
-            </button>
-            <button onClick={() => onDelete(task.id)} className="bg-red-500 text-white px-2 py-1 rounded">
-              削除
-            </button>
+        <>
+          <span>{task.title}</span>
+          <span className="text-sm text-gray-500">{task.status}</span>
+          <div className="flex gap-1">
+            <button onClick={() => setIsEditing(true)} className="bg-yellow-400 px-2 rounded">編集</button>
+            <button onClick={() => onDelete(task.id)} className="bg-red-500 px-2 rounded text-white">削除</button>
           </div>
-        </div>
+        </>
       )}
-    </div>
+    </li>
   )
 }
